@@ -19,7 +19,7 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK" });
 });
 
-// Error handler (must be last)
+// Error handler
 app.use(errorHandler);
 
 // Start server

@@ -1,8 +1,12 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./hooks";
-import { loadCategories, selectCategory } from "../slices/categoriesSlice";
-import { loadTodos, setStatusFilter } from "../slices/todosSlice";
-import type { StatusFilter, Todo } from "./types";
+import {
+  loadCategories,
+  selectCategory,
+  deleteCategory,
+} from "../slices/categoriesSlice";
+import { loadTodos, setStatusFilter, setSortBy } from "../slices/todosSlice";
+import type { StatusFilter, SortKey, Todo } from "./types";
 import TodoForm from "../components/TodoForm";
 import "./index.css";
 
@@ -16,6 +20,7 @@ function App() {
     loading,
     error,
     statusFilter,
+    sortBy,
   } = useAppSelector((state) => state.todos);
 
   useEffect(() => {
@@ -24,7 +29,7 @@ function App() {
 
   useEffect(() => {
     dispatch(loadTodos());
-  }, [dispatch, selectedCategoryId, statusFilter]);
+  }, [dispatch, selectedCategoryId, statusFilter, sortBy]);
 
   const grouped: Record<string, Todo[]> = {};
   for (const todo of todos) {
@@ -45,13 +50,28 @@ function App() {
           All
         </button>
         {categories.map((category) => (
-          <button
-            key={category.id}
-            className={selectedCategoryId === category.id ? "selected" : ""}
-            onClick={() => dispatch(selectCategory(category.id))}
-          >
-            {category.name}
-          </button>
+          <div key={category.id} className="category-row">
+            <button
+              className={selectedCategoryId === category.id ? "selected" : ""}
+              onClick={() => dispatch(selectCategory(category.id))}
+            >
+              {category.name}
+            </button>
+            <button
+              className="delete-button"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    `Delete category "${category.name}" and all its todos?`
+                  )
+                ) {
+                  dispatch(deleteCategory(category.id));
+                }
+              }}
+            >
+              X
+            </button>
+          </div>
         ))}
         <TodoForm.CategoryForm />
       </aside>
@@ -71,7 +91,18 @@ function App() {
               <option value="pending">Pending</option>
             </select>
           </div>
+          <div>
+            <label>Sort By: </label>
+            <select
+              value={sortBy}
+              onChange={(e) => dispatch(setSortBy(e.target.value as SortKey))}
+            >
+              <option value="dueDate">Due Date</option>
+              <option value="createdAt">Created At</option>
+            </select>
+          </div>
         </header>
+        reate
         <section className="todo-section">
           <h2>Todos</h2>
           {loading && <p>Loading...</p>}

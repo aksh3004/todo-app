@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Todo, Category, StatusFilter } from "./types";
+import type { Todo, Category, StatusFilter, SortKey } from "./types";
 
 const api = axios.create({
   baseURL: "http://localhost:4000",
@@ -7,11 +7,14 @@ const api = axios.create({
 
 export interface FetchTodosPayload {
   status?: StatusFilter;
+  sortBy?: SortKey;
   categoryId?: string;
 }
 
-export const fetchTodos = async (params: FetchTodosPayload = {}): Promise<Todo[]> => {
-  const response = await api.get<Todo[]>("/todos", {params});
+export const fetchTodos = async (
+  params: FetchTodosPayload = {}
+): Promise<Todo[]> => {
+  const response = await api.get<Todo[]>("/todos", { params });
   return response.data;
 };
 

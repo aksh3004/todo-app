@@ -158,8 +158,8 @@ function TodoItem({ todo }: { todo: Todo }) {
         {todo.description && (
           <div className="todo-desc">{todo.description}</div>
         )}
-        <div className="todo-meta">
-          Due: {formatForInput(todo.dueDate)} Created:{" "}
+        <div className="todo-dates">
+          Due Date: {formatForInput(todo.dueDate)} | Created At:{" "}
           {formatForInput(todo.createdAt)}
         </div>
       </div>

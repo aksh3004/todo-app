@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import type { Category } from "../src/types";
 import * as api from "../src/api";
 
@@ -31,7 +35,7 @@ export const addCategory = createAsyncThunk(
 );
 
 export const updateCategory = createAsyncThunk(
-  "todos/updateCategory",
+  "categories/updateCategory",
   async (payload: {
     id: string;
     updates: Partial<Omit<Category, "id" | "createdAt" | "updatedAt">>;
@@ -41,7 +45,7 @@ export const updateCategory = createAsyncThunk(
 );
 
 export const deleteCategory = createAsyncThunk(
-  "todos/deleteCategory",
+  "categories/deleteCategory",
   async (id: string) => {
     await api.deleteCategory(id);
     return id;
@@ -72,6 +76,13 @@ const categoriesSlice = createSlice({
       })
       .addCase(addCategory.fulfilled, (state, action) => {
         state.items.push(action.payload);
+      })
+      .addCase(deleteCategory.fulfilled, (state, action) => {
+        const id = action.payload;
+        state.items = state.items.filter((category) => category.id !== id);
+        if (state.selectedCategoryId === id) {
+          state.selectedCategoryId = null;
+        }
       });
   },
 });

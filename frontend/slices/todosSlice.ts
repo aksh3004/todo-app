@@ -1,13 +1,19 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { Todo, StatusFilter } from "../src/types";
+import {
+  createAsyncThunk,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
+import type { Todo, StatusFilter, SortKey } from "../src/types";
 import * as api from "../src/api";
 import type { RootState } from "../src/store";
+import { deleteCategory } from "./categoriesSlice";
 
 interface todosSlice {
   items: Todo[];
   loading: boolean;
   error: string | null;
   statusFilter: StatusFilter;
+  sortBy: SortKey;
 }
 
 const initialState: todosSlice = {
@@ -15,16 +21,18 @@ const initialState: todosSlice = {
   loading: false,
   error: null,
   statusFilter: "all",
+  sortBy: "dueDate",
 };
 
 export const loadTodos = createAsyncThunk<Todo[], void, { state: RootState }>(
   "todos/loadTodos",
   async (_, thunkAPI) => {
     const state = thunkAPI.getState();
-    const { statusFilter } = state.todos;
+    const { statusFilter, sortBy } = state.todos;
     const selectedCategoryId = state.categories.selectedCategoryId;
     return await api.fetchTodos({
       status: statusFilter,
+      sortBy: sortBy,
       categoryId: selectedCategoryId || undefined,
     });
   }
@@ -46,7 +54,7 @@ export const updateTodo = createAsyncThunk(
   "todos/updateTodo",
   async (payload: {
     id: string;
-    updates: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt" >>;
+    updates: Partial<Omit<Todo, "id" | "createdAt" | "updatedAt">>;
   }) => {
     return await api.updateTodo(payload.id, payload.updates);
   }
@@ -66,7 +74,10 @@ const todosSlice = createSlice({
   reducers: {
     setStatusFilter(state, action: PayloadAction<StatusFilter>) {
       state.statusFilter = action.payload;
-    }
+    },
+    setSortBy(state, action: PayloadAction<SortKey>) {
+      state.sortBy = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -95,9 +106,14 @@ const todosSlice = createSlice({
       })
       .addCase(deleteTodo.fulfilled, (state, action) => {
         state.items = state.items.filter((todo) => todo.id !== action.payload);
+      })
+      .addCase(deleteCategory.fulfilled, (state, action) => {
+        state.items = state.items.filter(
+          (todo) => todo.categoryId !== action.payload
+        );
       });
   },
 });
 
-export const {setStatusFilter} = todosSlice.actions;
+export const { setStatusFilter, setSortBy } = todosSlice.actions;
 export default todosSlice.reducer;

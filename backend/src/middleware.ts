@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
+import { ErrorRequestHandler } from "express";
 
 export class HTTPError extends Error {
   status: number;
@@ -8,8 +8,7 @@ export class HTTPError extends Error {
   }
 }
 
-export const errorHandler: ErrorRequestHandler = (
-  err, req, res, next) => {
+export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   const status = err.status || 500;
   const message = err.message || "Internal Server Error";
 
@@ -19,4 +18,4 @@ export const errorHandler: ErrorRequestHandler = (
       message,
     },
   });
-}
+};

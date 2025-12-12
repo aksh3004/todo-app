@@ -73,9 +73,14 @@ export const db = {
     return categories[index];
   },
   deleteCategory(id: string): boolean {
-    const index = categories.findIndex((category) => category.id === id);
-    if (index === -1) return false;
-    categories.splice(index, 1);
+    const categoryIndex = categories.findIndex((category) => category.id === id);
+    if (categoryIndex === -1) return false;
+    for (let index = todos.length - 1; index >= 0; index--) {
+      if (todos[index].categoryId === id) {
+        todos.splice(index, 1);
+      }
+    }
+    categories.splice(categoryIndex, 1);
     return true;
   },
 };

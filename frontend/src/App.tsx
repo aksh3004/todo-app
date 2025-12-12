@@ -5,7 +5,12 @@ import {
   selectCategory,
   deleteCategory,
 } from "../slices/categoriesSlice";
-import { loadTodos, setStatusFilter, setSortBy } from "../slices/todosSlice";
+import {
+  loadTodos,
+  setStatusFilter,
+  setSortBy,
+  setSearchTerm,
+} from "../slices/todosSlice";
 import type { StatusFilter, SortKey, Todo } from "./types";
 import TodoForm from "../components/TodoForm";
 import "./index.css";
@@ -21,6 +26,7 @@ function App() {
     error,
     statusFilter,
     sortBy,
+    searchTerm,
   } = useAppSelector((state) => state.todos);
 
   useEffect(() => {
@@ -29,7 +35,7 @@ function App() {
 
   useEffect(() => {
     dispatch(loadTodos());
-  }, [dispatch, selectedCategoryId, statusFilter, sortBy]);
+  }, [dispatch, selectedCategoryId, statusFilter, sortBy, searchTerm]);
 
   const grouped: Record<string, Todo[]> = {};
   for (const todo of todos) {
@@ -101,8 +107,16 @@ function App() {
               <option value="createdAt">Created At</option>
             </select>
           </div>
+          <div>
+            <label>Search: </label>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+              placeholder="Search todos..."
+            />
+          </div>
         </header>
-        reate
         <section className="todo-section">
           <h2>Todos</h2>
           {loading && <p>Loading...</p>}

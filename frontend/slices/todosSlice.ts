@@ -14,6 +14,7 @@ interface todosSlice {
   error: string | null;
   statusFilter: StatusFilter;
   sortBy: SortKey;
+  searchTerm: string;
 }
 
 const initialState: todosSlice = {
@@ -22,18 +23,20 @@ const initialState: todosSlice = {
   error: null,
   statusFilter: "all",
   sortBy: "dueDate",
+  searchTerm: "",
 };
 
 export const loadTodos = createAsyncThunk<Todo[], void, { state: RootState }>(
   "todos/loadTodos",
   async (_, thunkAPI) => {
     const state = thunkAPI.getState();
-    const { statusFilter, sortBy } = state.todos;
+    const { statusFilter, sortBy, searchTerm } = state.todos;
     const selectedCategoryId = state.categories.selectedCategoryId;
     return await api.fetchTodos({
       status: statusFilter,
       sortBy: sortBy,
       categoryId: selectedCategoryId || undefined,
+      search: searchTerm || undefined,
     });
   }
 );
@@ -78,6 +81,9 @@ const todosSlice = createSlice({
     setSortBy(state, action: PayloadAction<SortKey>) {
       state.sortBy = action.payload;
     },
+    setSearchTerm(state, action: PayloadAction<string>) {
+      state.searchTerm = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -115,5 +121,5 @@ const todosSlice = createSlice({
   },
 });
 
-export const { setStatusFilter, setSortBy } = todosSlice.actions;
+export const { setStatusFilter, setSortBy, setSearchTerm } = todosSlice.actions;
 export default todosSlice.reducer;

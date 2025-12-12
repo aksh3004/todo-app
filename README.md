@@ -7,8 +7,9 @@ A small full-stack todo application with a React/ Redux Toolkit frontend and Nod
 - You can organize your todo items by categories.
 - Filter items based on completion status.
 - Sort by date they are due or by creation date.
-- Responsive UI
-- Basic error handling and input validation for both frontend and backend
+- Responsive UI.
+- Basic error handling and input validation for both frontend and backend.
+- Additional search functionality.
 
 ## Installation & Setup
 
@@ -82,7 +83,8 @@ npm run dev
 2. **Add a Todo** - Fill in the todo form with title, description (optional), category, and due date.
 3. **Manage Todos** - Check off a todo item to mark it complete. You could update/ delete it as needed.
 4. **Filter & Sort** - Use the filter dropdown to view completed/ pending todos, or sort by date.
-5. **Select Categories** - Click on a category in the sidebar to view todos in that category only
+5. **Select Categories** - Click on a category in the sidebar to view todos in that category only.
+6. **Search Term** - Enter keywords in the search box to show any todos that have those keywords in their titles or descriptions.
 
 ## Design Decisions
 
@@ -112,4 +114,4 @@ I implemented Redux store and created slices for categories and todos, for manag
 
 ## Additional Feature
 
-?
+Added search functionality to seach across todos. If the keywords are in any title or description, then all todos with those keywords are shown.

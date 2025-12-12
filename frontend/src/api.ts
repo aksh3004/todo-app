@@ -9,6 +9,7 @@ export interface FetchTodosPayload {
   status?: StatusFilter;
   sortBy?: SortKey;
   categoryId?: string;
+  search?: string;
 }
 
 export const fetchTodos = async (

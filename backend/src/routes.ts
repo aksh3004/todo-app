@@ -1,13 +1,16 @@
 import { Router, Request, Response } from "express";
 import { db } from "./store";
 import { HTTPError } from "./middleware";
+import type { StatusFilter, SortKey } from "./types";
 
 const router = Router();
 
 // Get all todos
 router.get("/todos", (req, res) => {
-  const status = req.query.status as string | "all";
+  const status = req.query.status as StatusFilter | "all";
+  const sortBy = req.query.sortBy as SortKey | "dueDate";
   const categoryId = req.query.categoryId as string | undefined;
+  const search = (req.query.search as string | undefined)?.toLowerCase();
 
   let items = db.getAllTodos();
 
@@ -20,6 +23,21 @@ router.get("/todos", (req, res) => {
   if (categoryId) {
     items = items.filter((item) => item.categoryId === categoryId);
   }
+
+  if (search && search.trim()) {
+    const term = search.trim();
+    items = items.filter((item) => {
+      const title = item.title.toLowerCase();
+      const description = (item.description ?? "").toLowerCase();
+      return title.includes(term) || description.includes(term);
+    });
+  }
+
+  items = [...items].sort((a, b) => {
+    const aVal = a[sortBy];
+    const bVal = b[sortBy];
+    return aVal.localeCompare(bVal);
+  });
 
   res.json(items);
 });

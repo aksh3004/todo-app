@@ -44,6 +44,12 @@ body {
   margin-bottom: 1rem;
 }
 
+.toolvar input[type="text"] {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
 .main {
   flex: 1;
   padding: 1rem;

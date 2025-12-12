@@ -15,3 +15,6 @@ export interface Category {
   createdAt: string;
   updatedAt: string;
 }
+
+export type StatusFilter = "all" | "completed" | "pending";
+export type SortKey = "dueDate" | "createdAt";

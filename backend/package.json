@@ -1,12 +1,12 @@
 {
   "name": "todo-app-backend",
   "version": "1.0.0",
-  "main": "dist/server.js",
+  "main": "src/server.js",
   "description": "Backend API for todo app",
   "scripts": {
     "dev": "ts-node-dev --respawn src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node src/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

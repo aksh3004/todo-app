@@ -11,7 +11,7 @@ router.get("/todos", (req, res) => {
 
   let items = db.getAllTodos();
 
-  if (status === "active") {
+  if (status === "pending") {
     items = items.filter((item) => !item.completed);
   } else if (status === "completed") {
     items = items.filter((item) => item.completed);
@@ -74,15 +74,7 @@ router.post("/todos", (req, res, next) => {
 
 // Update todo
 router.patch("/todos/:id", (req, res) => {
-  const { title, description, categoryId, completed, dueDate } = req.body;
-  const updates: any = {};
-  updates.title = title.trim();
-  updates.description = description ? String(description.trim()) : "";
-  updates.dueDate = new Date(dueDate).toISOString();
-  updates.categoryId = categoryId;
-  updates.completed = completed;
-
-  const todo = db.updateTodo(req.params.id, updates);
+  const todo = db.updateTodo(req.params.id, req.body);
   res.json(todo);
 });
 
